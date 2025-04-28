@@ -131,7 +131,7 @@ const Integrations: React.FC = () => {
 
                 {/* Action Buttons */}
                 <div className="mt-8">
-                    <button className="px-6 py-2.5 bg_g text-white rounded-lg hover:bg-blue-700 font-medium">
+                    <button onClick={() => navigate("/chat")} className="px-6 py-2.5 bg_g text-white rounded-lg hover:bg-blue-700 font-medium">
                         Configure
                     </button>
                 </div>
