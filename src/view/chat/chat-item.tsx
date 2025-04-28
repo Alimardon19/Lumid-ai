@@ -11,6 +11,7 @@ import {
     RiSettingsLine,
     RiVideoLine
 } from 'react-icons/ri';
+import {useNavigate} from "react-router-dom";
 
 interface ChatItem {
     id: string;
@@ -32,6 +33,7 @@ interface Message {
 
 const ChatAppItem: React.FC = () => {
     const [activeTab, setActiveTab] = React.useState<'active' | 'history'>('active');
+    const navigate = useNavigate();
 
     const chatItems: ChatItem[] = [
         {
@@ -97,7 +99,7 @@ const ChatAppItem: React.FC = () => {
                     </div>
                     <div className="flex items-center space-x-4">
                         <button className="text-gray-600 hover:text-gray-900">
-                            <RiHomeLine className="text-xl"/>
+                            <RiHomeLine onClick={() => navigate("/")} className="text-xl"/>
                         </button>
                         <button className="text-gray-600 hover:text-gray-900">
                             <RiNotificationLine className="text-xl"/>
