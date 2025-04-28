@@ -82,25 +82,10 @@ const Dashboard: React.FC = () => {
 
     const aiAgents: AICardProps[] = [
         {
-            id: "zara",
-            path: '/step/company-info',
-            title: "Zara AI",
-            disabled: false,
-            description: "Your Smart Hiring Sidekick",
-            category: "HR & Recruiting",
-            icon: <RiUserStarLine className="text-blue-600 text-xl"/>,
-            features: [
-                {text: "Resume Screening & Scoring", iconColor: "purple"},
-                {text: "Interview Question Generator", iconColor: "purple"},
-                {text: "Candidate Assessment Reports", iconColor: "purple"}
-            ],
-            imageUrl: "https://storage.googleapis.com/uxpilot-auth.appspot.com/68939667ab-de385321a3379c48695b.png"
-        },
-        {
             id: "mila",
             path: '/step/company-info',
             title: "Mila AI",
-            disabled: true,
+            disabled: false,
             description: "Always-On Customer Support",
             category: "Customer Support",
             icon: <RiHeadphoneLine className="text-blue-600 text-xl"/>,
@@ -110,6 +95,21 @@ const Dashboard: React.FC = () => {
                 {text: "Ticket Management", iconColor: "blue"}
             ],
             imageUrl: "https://storage.googleapis.com/uxpilot-auth.appspot.com/68939667ab-d41291401c55e9004bb7.png"
+        },
+        {
+            id: "zara",
+            path: '/step/company-info',
+            title: "Zara AI",
+            disabled: true,
+            description: "Your Smart Hiring Sidekick",
+            category: "HR & Recruiting",
+            icon: <RiUserStarLine className="text-blue-600 text-xl"/>,
+            features: [
+                {text: "Resume Screening & Scoring", iconColor: "purple"},
+                {text: "Interview Question Generator", iconColor: "purple"},
+                {text: "Candidate Assessment Reports", iconColor: "purple"}
+            ],
+            imageUrl: "https://storage.googleapis.com/uxpilot-auth.appspot.com/68939667ab-de385321a3379c48695b.png"
         },
         {
             id: "bella",

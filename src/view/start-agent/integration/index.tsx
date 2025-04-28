@@ -1,4 +1,5 @@
 import React from 'react';
+import {useNavigate} from "react-router-dom";
 import {
     RiCheckboxCircleFill,
     RiCloseLine,
@@ -12,13 +13,16 @@ import {
 
 
 const Integrations: React.FC = () => {
+    const navigate = useNavigate();
+
+
     return (
         <div className="min-h-screen w-full bg-black/50 flex items-center justify-center">
             {/* Modal */}
             <div className="bg-white rounded-2xl shadow-2xl w-[800px] p-8 relative" data-aos="zoom-in">
                 {/* Close button */}
                 <button className="absolute right-4 top-4 text-gray-500 hover:text-gray-700">
-                    <RiCloseLine className="text-xl"/>
+                    <RiCloseLine className="text-xl" onClick={history.back}/>
                 </button>
 
                 {/* Modal Header */}
@@ -119,8 +123,7 @@ const Integrations: React.FC = () => {
                                 placeholder="Enter your Telegram User ID"
                             />
                         </div>
-                        <button
-                            className="px-6 py-2 bg_g text-white rounded-lg hover:bg-blue-700 font-medium self-end">
+                        <button onClick={() => navigate("/chat")} className="px-6 cursor-pointer py-2 bg_g text-white rounded-lg hover:bg-blue-700 font-medium self-end">
                             Save
                         </button>
                     </div>
