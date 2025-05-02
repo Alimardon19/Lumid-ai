@@ -17,7 +17,8 @@ const CheckDocuments: React.FC = () => {
 
         if (progress >= 100) {
             setTimeout(() => {
-                navigate('/integration');
+                // navigate('/integration');
+                navigate('/chat');
             }, 1500);
         }
 

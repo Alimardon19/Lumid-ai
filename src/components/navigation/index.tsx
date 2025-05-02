@@ -19,6 +19,8 @@ import {
     RiUserStarLine
 } from 'react-icons/ri';
 import {useNavigate} from "react-router-dom";
+import {storage} from "../../utils/storage.ts";
+import {LOCAL_USER_DATA} from "../../config/constants.ts";
 
 interface AICardProps {
     id: string;
@@ -38,6 +40,7 @@ interface AICardProps {
 const AICard: React.FC<AICardProps> = (props) => {
     const {id, title, description, category, icon, features, imageUrl, disabled, path} = props;
     const navigate = useNavigate();
+    const userData: any = storage.get(LOCAL_USER_DATA);
 
     return (
         <div id={`${id}-card`}
@@ -63,7 +66,7 @@ const AICard: React.FC<AICardProps> = (props) => {
                     ))}
                 </ul>
                 <button
-                    onClick={() => navigate(path)}
+                    onClick={() => navigate(userData?.mail && userData?.password ? path : "/login")}
                     disabled={disabled}
                     className={`${disabled ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'} w-full py-3 px-4 bg_g hover:bg-blue-700 text-white rounded-lg transition-colors duration-300`}
                 >
@@ -79,6 +82,10 @@ const Dashboard: React.FC = () => {
     const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([]);
     const [messageInput, setMessageInput] = useState('');
     const chatMessagesRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        console.log(storage.get(LOCAL_USER_DATA));
+    }, []);
 
     const aiAgents: AICardProps[] = [
         {

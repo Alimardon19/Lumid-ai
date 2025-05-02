@@ -1,18 +1,22 @@
 import React, {useState} from 'react';
 import {useNavigate} from "react-router-dom";
-import {RiArrowLeftLine, RiArrowRightLine, RiFileTextLine, RiUploadCloudLine} from 'react-icons/ri';
+import service from "../../../config/FetchInterceptor.ts";
+import {storage} from "../../../utils/storage.ts";
+import Loading from '../../../assets/loading.gif';
+import {notification} from "antd";
+import {RiArrowLeftLine, RiArrowRightLine, RiFileTextLine} from 'react-icons/ri';
 
 
 
 const StepCompanyInfo = () => {
     const [currentStep, setCurrentStep] = useState(1);
+    const [fileLoading, setFileLoading] = useState(false);
+    const [companyLoading, setCompanyLoading] = useState(false);
     const [formData, setFormData] = useState({
-        companyName: '',
-        industry: '',
-        email: '',
-        website: '',
-        companyInfoFile: null,
-        faqFile: null
+        name: "",
+        company: "",
+        telegram_api_key: "",
+        manager_telegram_ids: [11, 22, 33],
     });
     const navigate = useNavigate();
 
@@ -24,21 +28,36 @@ const StepCompanyInfo = () => {
         }));
     };
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, field: string) => {
-        if (e.target.files && e.target.files[0]) {
-            setFormData(prev => ({
-                ...prev,
-                [field]: e.target.files![0]
-            }));
-        }
-    };
+    const onChangeDocument = (e: any) => {
+        const file = e.target.files[0];
+
+        const f = new FormData();
+        f.append("data", file);
+        f.append("uuid", storage.get("uuid") as string);
+        setFileLoading(true);
+        service.post('/mila/saveFAQ', f).then(() => {
+            notification.success({message: "File uploaded successfully."});
+            navigate('/check-documents');
+        }).catch((err) => {
+            console.log(err);
+            notification.success({message: err.message});
+        }).finally(() => {
+            setFileLoading(false);
+        })
+    }
 
     const handleNext = () => {
         if (currentStep === 1) {
-            setCurrentStep(2);
-        } else {
-            // Handle form submission
-            console.log('Form submitted:', formData);
+            setCompanyLoading(true);
+            service.post('/mila/createAssistant', formData).then((data:any) => {
+                storage.set('uuid', data?.uuid);
+                setCurrentStep(2);
+            }).catch((err) => {
+                console.log(err);
+            }).finally(() => {
+                setCompanyLoading(false);
+            });
+        } else if (currentStep === 2) {
             navigate('/check-documents');
         }
     };
@@ -46,6 +65,8 @@ const StepCompanyInfo = () => {
     const handlePrevious = () => {
         setCurrentStep(1);
     };
+
+    console.log(formData);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -97,11 +118,11 @@ const StepCompanyInfo = () => {
 
                     <div className="space-y-6">
                         <div className="form-group">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Agent name</label>
                             <input
                                 type="text"
-                                name="companyName"
-                                value={formData.companyName}
+                                name="name"
+                                value={formData.name}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter company name"
@@ -109,37 +130,49 @@ const StepCompanyInfo = () => {
                         </div>
 
                         <div className="form-group">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Industry</label>
-                            <select
-                                name="industry"
-                                value={formData.industry}
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Company Name</label>
+                            <input
+                                type="text"
+                                name="company"
+                                value={formData.company}
                                 onChange={handleInputChange}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
-                            >
-                                <option value="">Select Industry</option>
-                                <option value="technology">Technology</option>
-                                <option value="healthcare">Healthcare</option>
-                                <option value="finance">Finance</option>
-                                <option value="retail">Retail</option>
-                                <option value="other">Other</option>
-                            </select>
-                            {formData.industry === 'other' && (
-                                <input
-                                    type="text"
-                                    name="industryOther"
-                                    onChange={handleInputChange}
-                                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Specify your industry"
-                                />
-                            )}
+                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="Enter company name"
+                            />
                         </div>
 
+                        {/*<div className="form-group">*/}
+                        {/*    <label className="block text-sm font-medium text-gray-700 mb-2">Industry</label>*/}
+                        {/*    <select*/}
+                        {/*        name="industry"*/}
+                        {/*        value={formData.industry}*/}
+                        {/*        onChange={handleInputChange}*/}
+                        {/*        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"*/}
+                        {/*    >*/}
+                        {/*        <option value="">Select Industry</option>*/}
+                        {/*        <option value="technology">Technology</option>*/}
+                        {/*        <option value="healthcare">Healthcare</option>*/}
+                        {/*        <option value="finance">Finance</option>*/}
+                        {/*        <option value="retail">Retail</option>*/}
+                        {/*        <option value="other">Other</option>*/}
+                        {/*    </select>*/}
+                        {/*    {formData.industry === 'other' && (*/}
+                        {/*        <input*/}
+                        {/*            type="text"*/}
+                        {/*            name="industryOther"*/}
+                        {/*            onChange={handleInputChange}*/}
+                        {/*            className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"*/}
+                        {/*            placeholder="Specify your industry"*/}
+                        {/*        />*/}
+                        {/*    )}*/}
+                        {/*</div>*/}
+
                         <div className="form-group">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Company Email</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Bot token</label>
                             <input
-                                type="email"
-                                name="email"
-                                value={formData.email}
+                                type="text"
+                                name="telegram_api_key"
+                                value={formData.telegram_api_key}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                 placeholder="Enter company email"
@@ -155,36 +188,42 @@ const StepCompanyInfo = () => {
                     <h2 className="text-2xl font-semibold mb-8">Additional Information</h2>
 
                     <div className="space-y-6">
-                        <div className="form-group">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Company Information</label>
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                                <RiUploadCloudLine className="text-3xl text-gray-400 mb-2 mx-auto"/>
-                                <p className="text-sm text-gray-500">Drag and drop your files here, or click to
-                                    browse</p>
-                                <input
-                                    type="file"
-                                    id="company-info-file"
-                                    onChange={(e) => handleFileChange(e, 'companyInfoFile')}
-                                    className="hidden"
-                                />
-                                <button
-                                    onClick={() => document.getElementById('company-info-file')?.click()}
-                                    className="mt-2 px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50"
-                                >
-                                    Browse Files
-                                </button>
-                            </div>
-                        </div>
+                        {/*<div className="form-group">*/}
+                        {/*    <label className="block text-sm font-medium text-gray-700 mb-2">Company Information</label>*/}
+                        {/*    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">*/}
+                        {/*        <RiUploadCloudLine className="text-3xl text-gray-400 mb-2 mx-auto"/>*/}
+                        {/*        <p className="text-sm text-gray-500">Drag and drop your files here, or click to*/}
+                        {/*            browse</p>*/}
+                        {/*        <input*/}
+                        {/*            disabled*/}
+                        {/*            type="file"*/}
+                        {/*            id="company-info-file"*/}
+                        {/*            onChange={(e) => handleFileChange(e, 'companyInfoFile')}*/}
+                        {/*            className="hidden"*/}
+                        {/*        />*/}
+                        {/*        <button*/}
+                        {/*            onClick={() => document.getElementById('company-info-file')?.click()}*/}
+                        {/*            className="mt-2 px-4 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50"*/}
+                        {/*        >*/}
+                        {/*            Browse Files*/}
+                        {/*        </button>*/}
+                        {/*    </div>*/}
+                        {/*</div>*/}
 
                         <div className="form-group">
                             <label className="block text-sm font-medium text-gray-700 mb-2">FAQ Document</label>
                             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                                <RiFileTextLine className="text-3xl text-gray-400 mb-2 mx-auto"/>
+                                { fileLoading ?
+                                    <div className="flex items-center justify-center mb-3">
+                                        <img src={Loading} width={50} alt=""/>
+                                    </div> :
+                                    <RiFileTextLine className="text-3xl text-gray-400 mb-2 mx-auto"/>
+                                }
                                 <p className="text-sm text-gray-500">Upload your FAQ document</p>
                                 <input
                                     type="file"
                                     id="faq-file"
-                                    onChange={(e) => handleFileChange(e, 'faqFile')}
+                                    onChange={onChangeDocument}
                                     className="hidden"
                                 />
                                 <button
@@ -196,18 +235,18 @@ const StepCompanyInfo = () => {
                             </div>
                         </div>
 
-                        <div className="form-group">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Company Website
-                                (Optional)</label>
-                            <input
-                                type="url"
-                                name="website"
-                                value={formData.website}
-                                onChange={handleInputChange}
-                                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="https://www.example.com"
-                            />
-                        </div>
+                        {/*<div className="form-group">*/}
+                        {/*    <label className="block text-sm font-medium text-gray-700 mb-2">Company Website*/}
+                        {/*        (Optional)</label>*/}
+                        {/*    <input*/}
+                        {/*        type="url"*/}
+                        {/*        name="website"*/}
+                        {/*        value={formData.website}*/}
+                        {/*        onChange={handleInputChange}*/}
+                        {/*        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"*/}
+                        {/*        placeholder="https://www.example.com"*/}
+                        {/*    />*/}
+                        {/*</div>*/}
                     </div>
                 </div>
 
@@ -223,12 +262,13 @@ const StepCompanyInfo = () => {
                         Previous
                     </button>
                     <button
+                        disabled={companyLoading}
                         onClick={handleNext}
                         className={`ml-auto px-6 py-2 bg_g text-white rounded-lg hover:bg-blue-700 ${
                             currentStep === 1 ? 'w-full' : ''
                         }`}
                     >
-                        {currentStep === 1 ? 'Next' : 'Submit'}
+                        {currentStep === 1 ? 'Next' : companyLoading ? 'Loading...' : 'Submit'}
                         <RiArrowRightLine className="inline ml-2"/>
                     </button>
                 </div>

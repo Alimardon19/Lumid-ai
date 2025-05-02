@@ -1,30 +1,28 @@
 import {useState} from "react";
-import axios from "axios";
 import {useNavigate} from "react-router-dom";
-import {storage, StorageExpiry} from "../../utils/storage.ts";
-import {LOCAL_USER_DATA} from "../../config/constants.ts";
+import service from "../../config/FetchInterceptor.ts";
 
 
-const AuthPage = () => {
+const RegisteredUser = () => {
     const [sendLoading, setSendLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
+        const values = {
+            [e.target[0].name]: e.target[0].value,
+            [e.target[1].name]: e.target[1].value,
+            [e.target[2].name]: e.target[2].value,
+            [e.target[3].name]: e.target[3].value,
+        };
         setSendLoading(true);
-
-        axios.get("https://api.nextflow.uz/webhook/v1/customer/getUser", {
-            headers: {
-                'Authorization': `Basic ${btoa(`${e.target[0].value}:${e.target[1].value}`)}`
-            }
-        }).then((response) => {
-            storage.set(LOCAL_USER_DATA, {...response?.data, password: e.target[1].value}, StorageExpiry.DAY);
-            navigate('/');
+        service.post("/customer/saveUser", {...values, language_id: 0}).then(() => {
+            navigate("/login");
         }).catch((err) => {
-            console.error(err);
+            console.log(err);
         }).finally(() => {
             setSendLoading(false);
-        });
+        })
     };
 
 
@@ -38,12 +36,41 @@ const AuthPage = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                        <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">Firstname</label>
+                        <div className="relative">
+                            <i className="ri-user-3-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input
+                                type="text"
+                                id="firstname"
+                                name="firstname"
+                                className="block w-full pl-10 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                                placeholder="Enter your firstname"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div className="space-y-2">
+                        <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">Lastname</label>
+                        <div className="relative">
+                            <i className="ri-user-3-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <input
+                                type="text"
+                                id="lastname"
+                                name="username"
+                                className="block w-full pl-10 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                                placeholder="Enter your lastname"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label htmlFor="mail" className="block text-sm font-medium text-gray-700">Email</label>
                         <div className="relative">
                             <i className="ri-mail-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             <input
                                 type="email"
-                                id="email"
+                                id="mail"
                                 name="mail"
                                 className="block w-full pl-10 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                                 placeholder="Enter your email"
@@ -55,13 +82,13 @@ const AuthPage = () => {
                     <div className="space-y-2">
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
                         <div className="relative">
-                            <i className="ri-lock-2-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <i className="ri-lock-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             <input
                                 type="password"
                                 id="password"
                                 name="password"
                                 className="block w-full pl-10 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-                                placeholder="enter your password"
+                                placeholder="Enter your password"
                                 required
                             />
                         </div>
@@ -77,7 +104,7 @@ const AuthPage = () => {
                                 <span>Sending...</span>
                             </div> :
                             <div>
-                                <span>LOGIN</span>
+                                <span>REGISTERED</span>
                                 &nbsp;&nbsp;&nbsp;
                                 <i className="ri-arrow-right-line"/>
                             </div>
@@ -85,8 +112,7 @@ const AuthPage = () => {
                     </button>
                 </form>
                 <div className="mt-3 flex items-center justify-center space-x-2">
-                    <span className="text-gray-500">not registered?</span> <span onClick={() => navigate("/registered")}
-                                                                                 className="text-blue-600 cursor-pointer">Create an account</span>
+                    <span className="text-gray-500">Already have an account?</span> <span onClick={() => navigate("/login")} className="text-blue-600 cursor-pointer">Sign in</span>
                 </div>
                 <div className="mt-6 text-center text-sm text-gray-500">
                     <p>By continuing, you agree to our</p>
@@ -101,4 +127,4 @@ const AuthPage = () => {
     );
 };
 
-export default AuthPage;
+export default RegisteredUser;
