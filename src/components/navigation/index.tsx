@@ -16,7 +16,8 @@ import {
     RiSearchLine,
     RiSendPlaneLine,
     RiSettingsLine,
-    RiUserStarLine
+    RiUserStarLine,
+    RiLogoutCircleLine
 } from 'react-icons/ri';
 import {useNavigate} from "react-router-dom";
 import {storage} from "../../utils/storage.ts";
@@ -40,7 +41,6 @@ interface AICardProps {
 const AICard: React.FC<AICardProps> = (props) => {
     const {id, title, description, category, icon, features, imageUrl, disabled, path} = props;
     const navigate = useNavigate();
-    const userData: any = storage.get(LOCAL_USER_DATA);
 
     return (
         <div id={`${id}-card`}
@@ -66,7 +66,7 @@ const AICard: React.FC<AICardProps> = (props) => {
                     ))}
                 </ul>
                 <button
-                    onClick={() => navigate(userData?.mail && userData?.password ? path : "/login")}
+                    onClick={() => navigate(path)}
                     disabled={disabled}
                     className={`${disabled ? 'opacity-75 cursor-not-allowed' : 'cursor-pointer'} w-full py-3 px-4 bg_g hover:bg-blue-700 text-white rounded-lg transition-colors duration-300`}
                 >
@@ -82,15 +82,20 @@ const Dashboard: React.FC = () => {
     const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([]);
     const [messageInput, setMessageInput] = useState('');
     const chatMessagesRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        console.log(storage.get(LOCAL_USER_DATA));
+        if (!storage.has(LOCAL_USER_DATA)) {
+            storage.clear();
+            navigate("/login");
+        }
     }, []);
+
 
     const aiAgents: AICardProps[] = [
         {
             id: "mila",
-            path: '/step/company-info',
+            path: '/mila-onboarding',
             title: "Mila AI",
             disabled: false,
             description: "Always-On Customer Support",
@@ -105,7 +110,7 @@ const Dashboard: React.FC = () => {
         },
         {
             id: "zara",
-            path: '/step/company-info',
+            path: '/mila-onboarding',
             title: "Zara AI",
             disabled: true,
             description: "Your Smart Hiring Sidekick",
@@ -120,7 +125,7 @@ const Dashboard: React.FC = () => {
         },
         {
             id: "bella",
-            path: '/step/company-info',
+            path: '/mila-onboarding',
             title: "Bella AI",
             disabled: true,
             description: "The Sales Coach You've Been Missing",
@@ -167,7 +172,7 @@ const Dashboard: React.FC = () => {
                     <div className="px-4 space-y-4">
                         <div className="space-y-2">
                             <div
-                                className="flex items-center px-4 py-2.5 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg cursor-pointer">
+                                className="flex items-center px-4 py-2.5 bg-indigo-50 text-indigo-600 rounded-lg cursor-pointer">
                                 <RiDashboardLine className="w-5 h-5"/>
                                 <span className="ml-3">Dashboard</span>
                             </div>
@@ -210,6 +215,15 @@ const Dashboard: React.FC = () => {
                                 className="flex items-center px-4 py-2.5 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg cursor-pointer">
                                 <RiInformationLine className="w-5 h-5"/>
                                 <span className="ml-3">Documentation</span>
+                            </div>
+                            <div
+                                onClick={() => {
+                                    storage.clear();
+                                    navigate("/login");
+                                }}
+                                className="flex items-center px-4 py-2.5 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 rounded-lg cursor-pointer">
+                                <RiLogoutCircleLine  className="w-5 h-5"/>
+                                <span className="ml-3">Log out</span>
                             </div>
                         </div>
                     </div>
@@ -343,7 +357,7 @@ const Dashboard: React.FC = () => {
                                         type="text"
                                         value={messageInput}
                                         onChange={(e) => setMessageInput(e.target.value)}
-                                        onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                                        onKeyUp={(e) => e.key === 'Enter' && sendMessage()}
                                         className="flex-1 border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="Type your message..."
                                     />

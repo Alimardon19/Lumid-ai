@@ -40,7 +40,7 @@ service.interceptors.response.use(
         return response.data;
     },
     (error) => {
-        let notificationParam: { message?: any; description?: any } = {
+        let notificationParam: { message?: string; description?: string } = {
             message: error.message,
         };
 

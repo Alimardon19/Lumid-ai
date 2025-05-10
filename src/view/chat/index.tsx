@@ -6,6 +6,10 @@ import {
     RiAddLine, RiArrowUpLine, RiArrowDownLine
 } from 'react-icons/ri';
 import {useNavigate} from "react-router-dom";
+import {useDispatch} from "react-redux";
+import {updateAppState} from "../../store/actions";
+import {storage} from "../../utils/storage.ts";
+import {ONBOARDING_STEP} from "../../config/constants.ts";
 
 interface ChatItem {
     id: string;
@@ -39,6 +43,7 @@ interface StatCard {
 const AppChat: React.FC = () => {
     const [activeTab, setActiveTab] = React.useState<'active' | 'history'>('active');
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const chatItems: ChatItem[] = [
         {
@@ -153,7 +158,11 @@ const AppChat: React.FC = () => {
                     </div>
                     <div className="flex items-center space-x-4">
                         <button className="text-gray-600 hover:text-gray-900">
-                            <RiHomeLine onClick={() => navigate("/")} className="text-xl" />
+                            <RiHomeLine onClick={() => {
+                                dispatch(updateAppState("onboardingStep", {step: 1}));
+                                storage.set(ONBOARDING_STEP, 1);
+                                navigate("/");
+                            }} className="text-xl" />
                         </button>
                         <button className="text-gray-600 hover:text-gray-900">
                             <RiNotificationLine className="text-xl" />

@@ -1,1 +1,7 @@
-export const LOCAL_USER_DATA = 'CEGNBV';
+export const LOCAL_USER_DATA = 'USER_DATA';
+export const ONBOARDING = 'ONBOARDING';
+export const ONBOARDING_STEP = 'ONBOARDING_STEP';
+export const UUID = 'UUID';
+export const BOT_TOKEN = 'BOT_TOKEN';
+export const INTEGRATIONS_KEY = 'INTEGRATIONS_KEY';
+export const RESPONSE_BOT_TOKEN = 'RESPONSE_BOT_TOKEN';

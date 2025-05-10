@@ -1,10 +1,12 @@
-import {useState} from "react";
+import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import service from "../../config/FetchInterceptor.ts";
 
 
 const RegisteredUser = () => {
     const [sendLoading, setSendLoading] = useState(false);
+    const [phone, setPhone] = useState("");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = (e: any) => {
@@ -25,6 +27,24 @@ const RegisteredUser = () => {
         })
     };
 
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let value = e.target.value;
+        if (value.trim().length > 13) return;
+
+        if (!value.startsWith("+998")) {
+            value = "+998" + value.replace(/^\+998\s?/, "");
+        }
+        setPhone(value);
+        const regex: RegExp = /^\+998\s?\(?\d{2}\)?\s?\d{3}\s?\d{2}\s?\d{2}$/;
+        if (value === "" || regex.test(value)) {
+            setError("");
+        } else {
+            setError("Format is incorrect. Example: +998 (__) ___ __ __");
+        }
+    };
+
+
+
 
     return (
         <div className="min-h-screen flex items-center justify-center">
@@ -36,32 +56,39 @@ const RegisteredUser = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="space-y-2">
-                        <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">Firstname</label>
+                        <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">Full name</label>
                         <div className="relative">
                             <i className="ri-user-3-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             <input
                                 type="text"
-                                id="firstname"
-                                name="firstname"
+                                id="fullname"
+                                name="fullname"
                                 className="block w-full pl-10 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-                                placeholder="Enter your firstname"
+                                placeholder="Enter your fullname"
                                 required
                             />
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">Lastname</label>
+                        <label htmlFor="phonenumber" className="block text-sm font-medium text-gray-700">Phone number</label>
                         <div className="relative">
                             <i className="ri-user-3-fill absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             <input
                                 type="text"
-                                id="lastname"
-                                name="username"
-                                className="block w-full pl-10 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
-                                placeholder="Enter your lastname"
+                                id="phonenumber"
+                                name="phonenumber"
+                                value={phone}
+                                onChange={handlePhoneChange}
+                                className={`block w-full pl-10 pr-3 py-2.5 bg-white border ${
+                                    error ? "border-red-500" : "border-gray-300"
+                                } rounded-lg focus:ring-2 ${
+                                    error ? "focus:ring-red-500" : "focus:ring-blue-500"
+                                } focus:border-transparent text-gray-900 placeholder-gray-400`}
+                                placeholder="+998 (90) 123 45 67"
                                 required
                             />
                         </div>
+                        {error && <p className="text-sm text-red-500">{error}</p>}
                     </div>
 
                     <div className="space-y-2">
