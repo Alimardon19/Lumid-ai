@@ -29,7 +29,7 @@ const StepOne = () => {
 
     return (
         <div>
-            <div data-aos="flip-left">
+            <div data-aos="zoom-in">
                 <h1 className="text-[24px] font-semibold mb-8">Company Information</h1>
 
                 <Form layout="vertical" onFinish={onFinish} form={form}>

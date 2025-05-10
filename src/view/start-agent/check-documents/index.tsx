@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {RiBrainLine, RiCpuLine, RiNodeTree} from 'react-icons/ri';
 import {useNavigate} from "react-router-dom";
+import {Carousel} from "antd";
 
 
 const CheckDocuments: React.FC = () => {
@@ -61,41 +62,42 @@ const CheckDocuments: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-slate-200">
-                        <div className="flex items-center mb-3">
-                            <RiBrainLine className="text-blue-500 text-xl"/>
-                            <span className="ml-3 font-semibold text-slate-700">Data Analysis</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-600">Processing</span>
-                            <span className="text-sm font-semibold text-blue-500">89%</span>
-                        </div>
-                    </div>
+                    <div className="flex justify-center">
+                        <Carousel arrows={true} autoplay={true} autoplaySpeed={2500} effect="fade" style={{width: "300px"}}>
+                            <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-slate-200">
+                                <div className="flex items-center mb-3">
+                                    <RiBrainLine className="text-blue-500 text-xl"/>
+                                    <span className="ml-3 font-semibold text-slate-700">Data Analysis</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-slate-600">Processing</span>
+                                    <span className="text-sm font-semibold text-blue-500">89%</span>
+                                </div>
+                            </div>
 
-                    <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-slate-200">
-                        <div className="flex items-center mb-3">
-                            <RiNodeTree className="text-purple-500 text-xl"/>
-                            <span className="ml-3 font-semibold text-slate-700">Pattern Recognition</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-600">Learning</span>
-                            <span className="text-sm font-semibold text-purple-500">67%</span>
-                        </div>
-                    </div>
+                            <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-slate-200">
+                                <div className="flex items-center mb-3">
+                                    <RiNodeTree className="text-purple-500 text-xl"/>
+                                    <span className="ml-3 font-semibold text-slate-700">Pattern Recognition</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-slate-600">Learning</span>
+                                    <span className="text-sm font-semibold text-purple-500">67%</span>
+                                </div>
+                            </div>
 
-                    <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-slate-200">
-                        <div className="flex items-center mb-3">
-                            <RiCpuLine className="text-cyan-500 text-xl"/>
-                            <span className="ml-3 font-semibold text-slate-700">Model Training</span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-slate-600">Optimizing</span>
-                            <span className="text-sm font-semibold text-cyan-500">82%</span>
-                        </div>
+                            <div className="bg-white/50 backdrop-blur-sm rounded-xl p-6 border border-slate-200">
+                                <div className="flex items-center mb-3">
+                                    <RiCpuLine className="text-cyan-500 text-xl"/>
+                                    <span className="ml-3 font-semibold text-slate-700">Model Training</span>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <span className="text-sm text-slate-600">Optimizing</span>
+                                    <span className="text-sm font-semibold text-cyan-500">82%</span>
+                                </div>
+                            </div>
+                        </Carousel>
                     </div>
-                </div>
-
                 <div className="mt-8 text-center text-sm text-slate-500">
                     <p>Estimated time remaining: 2 minutes</p>
                     <p className="mt-1">Processing 2,457 data points</p>

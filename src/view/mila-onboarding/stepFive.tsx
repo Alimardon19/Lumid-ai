@@ -64,7 +64,7 @@ const StepFive = () => {
     return (
         <>
             {contextHolder}
-            <div>
+            <div data-aos="zoom-in">
                 <div className="mb-8">
                     <h1 className="text-[24px] font-semibold">Add integrations</h1>
                     <p className="text-[#4B5563] text-[16px]">Select messaging channels to connect with your AI Agent</p>

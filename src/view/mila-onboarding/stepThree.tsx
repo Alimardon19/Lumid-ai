@@ -46,7 +46,7 @@ const StepThree = () => {
 
     return (
         <div>
-            <div data-aos="flip-left">
+            <div data-aos="zoom-in">
                 <h1 className="text-[24px] font-semibold mb-8">How should the assistant develop the dialogue?</h1>
                 <div className="bg-[#FFFBEB] mb-10 rounded-sm border-l-4 border-[#F59E0B] text-[#B45309] p-4" role="alert">
                     <p>See the example below. This is not a clear script, but a rough outline of the ideal dialogue that the AI assistant will try to.</p>
