@@ -1,6 +1,6 @@
 import {useEffect} from "react";
 import {useDispatch} from "react-redux";
-import {Divider, Form, FormProps, Input, Select} from "antd";
+import {Col, Divider, Form, FormProps, Input, Row, Select} from "antd";
 
 import {storage} from "../../utils/storage.ts";
 import {updateAppState} from "../../store/actions";
@@ -57,9 +57,40 @@ const StepOne = () => {
                         />
                     </Form.Item>
 
-                    <Form.Item name="company_email" label="Company Email" rules={[{type: "email"}]}>
-                        <Input placeholder="Enter company email" size="large"/>
-                    </Form.Item>
+                    <Row gutter={[16, 16]}>
+                        <Col span={12}>
+                            <Form.Item name="company_email" label="Company Email" rules={[{type: "email"}]}>
+                                <Input placeholder="Enter company email" size="large"/>
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="company_website" label="Company Website (Comming soon)">
+                                <Input
+                                    size="large"
+                                    placeholder="https://www.yourcompany.com"
+                                    prefix={<i className="ri-global-line text-[#9CA3AF] mr-1"/>}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="instagram_account" label="Instagram Account (Comming soon)">
+                                <Input
+                                    size="large"
+                                    placeholder="@youraccount"
+                                    prefix={<i className="ri-instagram-line text-[#9CA3AF] mr-1"/>}
+                                />
+                            </Form.Item>
+                        </Col>
+                        <Col span={12}>
+                            <Form.Item name="telegram_channel" label="Telegram Channel (Comming soon)">
+                                <Input
+                                    size="large"
+                                    placeholder="@youraccount"
+                                    prefix={<i className="ri-telegram-fill text-[#9CA3AF] mr-1"/>}
+                                />
+                            </Form.Item>
+                        </Col>
+                    </Row>
                 </Form>
             </div>
 

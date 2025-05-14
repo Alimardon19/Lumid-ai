@@ -2,13 +2,13 @@ import {useDispatch} from "react-redux";
 import React, {useEffect, useState} from "react";
 import {FaFileAlt} from "react-icons/fa";
 import {IoMdCloudUpload} from "react-icons/io";
-import {Col, Divider, Form, FormProps, Input, notification, Row} from "antd";
+import {Col, Divider, Form, FormProps, notification, Row} from "antd";
 
 import {storage} from "../../utils/storage.ts";
-import {postCompanyInfo, updateAppState} from "../../store/actions";
+import {updateAppState} from "../../store/actions";
 import service from "../../config/FetchInterceptor.ts";
 import {useAppSelector} from "../../utils/useAppSelector.ts";
-import {ONBOARDING, ONBOARDING_STEP} from "../../config/constants.ts";
+import {ONBOARDING, ONBOARDING_STEP, UUID} from "../../config/constants.ts";
 import OnboardingFooterButton from "../../components/OnboardingFooterButton.tsx";
 
 
@@ -45,6 +45,7 @@ const StepFour = () => {
             const selectedFile: File = files[0];
             const f = new FormData();
             f.append("data", selectedFile);
+            f.append("uuid", storage.get(UUID) as string);
             f.append("content_type", type);
             updateLoadingIndex(index, true);
             service.post("/mila/saveDocument", f).then(() => {
@@ -56,12 +57,9 @@ const StepFour = () => {
     };
 
     const onFinish: FormProps['onFinish'] = (values) => {
-        dispatch(updateAppState("onboardingStep", {data: {...data, ...values}, step: 4}));
+        dispatch(updateAppState("onboardingStep", {data: {...data, ...values}, step: 5}));
         storage.set(ONBOARDING, {...localOnboarding, ...values});
-        storage.set(ONBOARDING_STEP, 4);
-
-        dispatch(updateAppState("companyInfo", {saveLoading: true}));
-        dispatch(postCompanyInfo({data: {...localOnboarding, ...values}}));
+        storage.set(ONBOARDING_STEP, 5);
     };
 
     const loaderSpin = (
@@ -79,14 +77,6 @@ const StepFour = () => {
                 <h1 className="text-[24px] font-semibold mb-8">Company Information</h1>
 
                 <Form layout="vertical" onFinish={onFinish} form={form}>
-                    <Form.Item name="agent_name" label="AI Agent Name" rules={[{required: true}]} help="This is the name your customers will interact with">
-                        <Input
-                            size="large"
-                            placeholder="Mila"
-                            prefix={<i className="ri-robot-2-fill text-[#9CA3AF] mr-1"/>}
-                        />
-                    </Form.Item>
-                    <br/>
                     <Row gutter={[16, 16]}>
                         <Col span={12}>
                             <h2 className="font-semibold text-[#374151] mb-2">Company Information</h2>
@@ -127,36 +117,6 @@ const StepFour = () => {
                             </div>
                         </Col>
                     </Row>
-                    <br/>
-                    <Form.Item name="company_website" label="Company Website (Comming soon)">
-                        <Input
-                            size="large"
-                            placeholder="https://www.yourcompany.com"
-                            prefix={<i className="ri-global-line text-[#9CA3AF] mr-1"/>}
-                        />
-                    </Form.Item>
-
-                    <Row gutter={[16, 16]}>
-                        <Col span={12}>
-                            <Form.Item name="instagram_account" label="Instagram Account (Comming soon)">
-                                <Input
-                                    size="large"
-                                    placeholder="@youraccount"
-                                    prefix={<i className="ri-instagram-line text-[#9CA3AF] mr-1"/>}
-                                />
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item name="telegram_channel" label="Telegram Channel (Comming soon)">
-                                <Input
-                                    size="large"
-                                    placeholder="@youraccount"
-                                    prefix={<i className="ri-telegram-fill text-[#9CA3AF] mr-1"/>}
-                                />
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
                 </Form>
             </div>
 

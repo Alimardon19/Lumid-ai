@@ -22,6 +22,8 @@ import {
 import {useNavigate} from "react-router-dom";
 import {storage} from "../../utils/storage.ts";
 import {LOCAL_USER_DATA} from "../../config/constants.ts";
+import {useDispatch} from "react-redux";
+import {updateAppState} from "../../store/actions";
 
 interface AICardProps {
     id: string;
@@ -82,9 +84,12 @@ const Dashboard: React.FC = () => {
     const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([]);
     const [messageInput, setMessageInput] = useState('');
     const chatMessagesRef = useRef<HTMLDivElement>(null);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
+        dispatch(updateAppState("onboardingStep", {step: 1}));
+
         if (!storage.has(LOCAL_USER_DATA)) {
             storage.clear();
             navigate("/login");

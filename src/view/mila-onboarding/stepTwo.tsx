@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useDispatch} from "react-redux";
-import {Button, Divider, Form, FormProps, Select} from "antd";
+import {Button, Divider, Form, FormProps, Input, Select} from "antd";
 import { FaWrench } from "react-icons/fa";
 
 import {storage} from "../../utils/storage.ts";
@@ -37,13 +37,20 @@ const StepTwo = () => {
     };
 
 
-
     return (
         <div>
             <div data-aos="zoom-in">
                 <h1 className="text-[24px] font-semibold mb-8">Mila's Communication Style with your clients</h1>
 
                 <Form layout="vertical" onFinish={onFinish} form={form}>
+                    <Form.Item name="agent_name" label="AI Agent Name" rules={[{required: true}]} help="This is the name your customers will interact with">
+                        <Input
+                            size="large"
+                            placeholder="Mila"
+                            prefix={<i className="ri-robot-2-fill text-[#9CA3AF] mr-1"/>}
+                        />
+                    </Form.Item>
+                    <br/>
                     <Form.Item name="communication_style" label="In what style should Mila communicate?">
                         <Select
                             size="large"
@@ -70,12 +77,24 @@ const StepTwo = () => {
                             placeholder="Select response style"
                             options={[
                                 {
-                                    value: "Sometimes with a small letter, without periods at the end of sentences",
-                                    label: "Sometimes with a small letter, without periods at the end of sentences"
+                                    value: "Please hold on a moment — our manager will get back to you shortly regarding this question",
+                                    label: "Please hold on a moment — our manager will get back to you shortly regarding this question"
                                 },
                                 {
-                                    value: "Only with a capital letter, with periods at the end of sentences",
-                                    label: "Only with a capital letter, with periods at the end of sentences"
+                                    value: "I’ve forwarded this question to our manager, and they will respond to you as soon as possible.",
+                                    label: "I’ve forwarded this question to our manager, and they will respond to you as soon as possible."
+                                },
+                                {
+                                    value: "Your question requires additional assistance, so I’ve passed it along to our manager.",
+                                    label: "Your question requires additional assistance, so I’ve passed it along to our manager."
+                                },
+                                {
+                                    value: "I’ll clarify this question and get back to you shortly.",
+                                    label: "I’ll clarify this question and get back to you shortly."
+                                },
+                                {
+                                    value: "I need to confirm some details on this — thank you for your patience, you’ll receive an update soon.",
+                                    label: "I need to confirm some details on this — thank you for your patience, you’ll receive an update soon."
                                 }
                             ]}
                         />

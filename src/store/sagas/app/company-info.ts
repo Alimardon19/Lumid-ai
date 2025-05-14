@@ -19,8 +19,8 @@ function* callPostCompanyInfo() {
             if (data["uuid"]) {
                 storage.set(UUID, data["uuid"]);
             }
-            yield put(updateAppState("onboardingStep", {step: 5}));
-            storage.set(ONBOARDING_STEP, 5);
+            yield put(updateAppState("onboardingStep", {step: 4}));
+            storage.set(ONBOARDING_STEP, 4);
         } catch (error) {
             console.log(error);
         } finally {
