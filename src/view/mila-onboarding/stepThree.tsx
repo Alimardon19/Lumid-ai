@@ -8,7 +8,7 @@ import {RiDeleteBinLine} from "react-icons/ri";
 import {storage} from "../../utils/storage.ts";
 import {useAppSelector} from "../../utils/useAppSelector.ts";
 import {postCompanyInfo, updateAppState} from "../../store/actions";
-import {ONBOARDING, ONBOARDING_STEP} from "../../config/constants.ts";
+import {ONBOARDING} from "../../config/constants.ts";
 import OnboardingFooterButton from "../../components/OnboardingFooterButton.tsx";
 
 
@@ -38,9 +38,8 @@ const StepThree = () => {
     };
 
     const onFinish = () => {
-        dispatch(updateAppState("onboardingStep", {data: {...data, ...values}, step: 4}));
+        dispatch(updateAppState("onboardingStep", {data: {...data, ...values}}));
         storage.set(ONBOARDING, {...localOnboarding, ...values, dialog_schema: dialogSchema});
-        storage.set(ONBOARDING_STEP, 4);
 
         dispatch(updateAppState("companyInfo", {saveLoading: true}));
         dispatch(postCompanyInfo({data: {...localOnboarding, ...values}}));

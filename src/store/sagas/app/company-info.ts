@@ -21,7 +21,8 @@ function* callPostCompanyInfo() {
             }
             yield put(updateAppState("onboardingStep", {step: 4}));
             storage.set(ONBOARDING_STEP, 4);
-        } catch (error) {
+        } catch (error: any) {
+            showMessage.error(error?.response?.data?.error).then();
             console.log(error);
         } finally {
             yield put(updateAppState("companyInfo", {saveLoading: false}));
@@ -42,6 +43,7 @@ function* callPostTelegramBot() {
                 storage.set(RESPONSE_BOT_TOKEN, data);
             }
         } catch (error) {
+            showMessage.error("This 'uuid' is used!").then();
             console.log(error);
         } finally {
             yield put(updateAppState("saveTelegramBot", {saveLoading: false}));
